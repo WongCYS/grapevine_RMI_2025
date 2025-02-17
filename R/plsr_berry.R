@@ -15,7 +15,7 @@ df_spectra_2023 <- read.csv(paste0(wd, "RMI_grapes/RMI2023/spectroscopy/svc_clea
 #merge spectra
 df_spectra <- rbind(df_spectra_2021, df_spectra_2023)
 
-# extract leaf spectra and clean
+# extract berry spectra and clean
 df_spectra <- df_spectra %>%
   group_by(Block, Row, Vine, Variety, date) %>%
   filter(grepl(pattern ="berry", rep)) %>%
@@ -443,10 +443,10 @@ plt_sp_brix_plsr <- df_test %>%
   geom_point() +
   geom_smooth(aes(color = NULL), color = 'black', method = 'lm', formula = y~x, se = F) +
   geom_abline(slope = 1, intercept = 0, linetype = 'dashed')+
-  scale_x_continuous("Predicted Brix", limits = c(0,35))+
-  scale_y_continuous("Observed Brix", limits = c(0,35))+
+  scale_x_continuous("Predicted Brix", limits = c(10,30))+
+  scale_y_continuous("Observed Brix", limits = c(10,30))+
   scale_color_manual(values = col_all)+
-  annotate("text", x = 0, y = Inf, vjust = 1.35, hjust = 0, 
+  annotate("text", x = 10, y = Inf, vjust = 1.35, hjust = 0, 
            label = paste("RMSPE =", round(df_stats[df_stats$param == "brix", "rmspe"]$rmspe, 2), "%",
                          "\nR² =", round(df_stats[df_stats$param == "brix", "rsq"]$rsq, 2),
                          cut(df_stats[df_stats$param == "brix", "p"]$p, 
@@ -460,10 +460,10 @@ plt_sp_brix_plsr_v <- df_test %>%
   geom_point() +
   geom_smooth(aes(color = NULL), color = 'black', method = 'lm', formula = y~x, se = F) +
   geom_abline(slope = 1, intercept = 0, linetype = 'dashed')+
-  scale_x_continuous("Predicted Brix", limits = c(0,35))+
-  scale_y_continuous("Observed Brix", limits = c(0,35))+
+  scale_x_continuous("Predicted Brix", limits = c(10,30))+
+  scale_y_continuous("Observed Brix", limits = c(10,30))+
   scale_color_manual(values = col_ver)+
-  annotate("text", x = 0, y = Inf, vjust = 1.35, hjust = 0, 
+  annotate("text", x = 10, y = Inf, vjust = 1.35, hjust = 0, 
            label = paste("RMSPE =", round(df_stats[df_stats$param == "brix_veraison", "rmspe"]$rmspe, 2), "%",
                          "\nR² =", round(df_stats[df_stats$param == "brix_veraison", "rsq"]$rsq, 2),
                          cut(df_stats[df_stats$param == "brix_veraison", "p"]$p, 
@@ -477,7 +477,7 @@ plt_sp_brix_ndvi <- df_test %>%
   geom_point() +
   geom_smooth(aes(color = NULL), color = 'black', method = 'lm', formula = y~x, se = F) +
   scale_x_continuous("NDVI", limits = c(0.5,1))+
-  scale_y_continuous("Observed Brix", limits = c(0,35))+
+  scale_y_continuous("Observed Brix", limits = c(10,30))+
   scale_color_manual(values = col_all)+
   annotate("text", x = .5, y = Inf, vjust = 2, hjust = 0, 
            label = paste("R² =", round(df_stats_ndvi[df_stats_ndvi$param == "brix", "rsq"]$rsq, 2),
@@ -491,8 +491,8 @@ plt_sp_brix_ndvi_v <- df_test %>%
   ggplot(aes(x = ndvi, y = truth, color = as.factor(date))) +
   geom_point() +
   geom_smooth(aes(color = NULL), color = 'black', method = 'lm', formula = y~x, se = F) +
-  scale_x_continuous("NDVI", limits = c(0.5,1))+
-  scale_y_continuous("Observed Brix", limits = c(0,35))+
+  scale_x_continuous("NDVI", limits = c(0.5,.8))+
+  scale_y_continuous("Observed Brix", limits = c(10,30))+
   scale_color_manual(values = col_ver)+
   annotate("text", x = .5, y = Inf, vjust = 2, hjust = 0, 
            label = paste("R² =", round(df_stats_ndvi[df_stats_ndvi$param == "brix_veraison", "rsq"]$rsq, 2),
@@ -507,9 +507,9 @@ plt_sp_brix_pri <- df_test %>%
   geom_point() +
   geom_smooth(aes(color = NULL), color = 'black', method = 'lm', formula = y~x, se = F) +
   scale_x_continuous("PRI", limits = c(-.1,.1))+
-  scale_y_continuous("Observed Brix", limits = c(0,35))+
+  scale_y_continuous("Observed Brix", limits = c(10,30))+
   scale_color_manual(values = col_all)+
-  annotate("text", x = 0, y = Inf, vjust = 2, hjust = 0, 
+  annotate("text", x = 10, y = Inf, vjust = 2, hjust = 0, 
            label = paste("R² =", round(df_stats_pri[df_stats_pri$param == "brix", "rsq"]$rsq, 2),
                          cut(df_stats_pri[df_stats_pri$param == "brix", "p"]$p, 
                              breaks = c(-Inf, 0.001, 0.01, 0.05, Inf),
@@ -522,9 +522,9 @@ plt_sp_brix_pri_v <- df_test %>%
   geom_point() +
   geom_smooth(aes(color = NULL), color = 'black', method = 'lm', formula = y~x, se = F) +
   scale_x_continuous("PRI", limits = c(-.1,.1))+
-  scale_y_continuous("Observed Brix", limits = c(0,35))+
+  scale_y_continuous("Observed Brix", limits = c(10,30))+
   scale_color_manual(values = col_ver)+
-  annotate("text", x = 0, y = Inf, vjust = 2, hjust = 0, 
+  annotate("text", x = 10, y = Inf, vjust = 2, hjust = 0, 
            label = paste("R² =", round(df_stats_pri[df_stats_pri$param == "brix_veraison", "rsq"]$rsq, 2),
                          cut(df_stats_pri[df_stats_pri$param == "brix_veraison", "p"]$p, 
                              breaks = c(-Inf, 0.001, 0.01, 0.05, Inf),
@@ -537,8 +537,8 @@ plt_sp_ta_plsr <- df_test %>%
   geom_point() +
   geom_smooth(aes(color = NULL), color = 'black', method = 'lm', formula = y~x, se = F) +
   geom_abline(slope = 1, intercept = 0, linetype = 'dashed')+
-  scale_x_continuous(expression(atop("Predicted", "Tartaric acid (g/L)")), limits = c(0,20))+
-  scale_y_continuous(expression(atop("Observed", "Tartaric acid (g/L)")), limits = c(0,20))+
+  scale_x_continuous(expression(atop("Predicted", "Tartaric acid (g/L)")), limits = c(0,10))+
+  scale_y_continuous(expression(atop("Observed", "Tartaric acid (g/L)")), limits = c(0,10))+
   scale_color_manual(values = col_all)+
   annotate("text", x = 0, y = Inf, vjust = 1.35, hjust = 0, 
            label = paste("RMSPE =", round(df_stats[df_stats$param == "ta", "rmspe"]$rmspe, 2), "%",
@@ -554,8 +554,8 @@ plt_sp_ta_plsr_v <- df_test %>%
   geom_point() +
   geom_smooth(aes(color = NULL), color = 'black', method = 'lm', formula = y~x, se = F) +
   geom_abline(slope = 1, intercept = 0, linetype = 'dashed')+
-  scale_x_continuous(expression(atop("Predicted", "Tartaric acid (g/L)")), limits = c(0,15))+
-  scale_y_continuous(expression(atop("Observed", "Tartaric acid (g/L)")), limits = c(0,15))+
+  scale_x_continuous(expression(atop("Predicted", "Tartaric acid (g/L)")), limits = c(0,10))+
+  scale_y_continuous(expression(atop("Observed", "Tartaric acid (g/L)")), limits = c(0,10))+
   scale_color_manual(values = col_ver)+
   annotate("text", x = 0, y = Inf, vjust = 1.35, hjust = 0, 
            label = paste("RMSPE =", round(df_stats[df_stats$param == "ta_veraison", "rmspe"]$rmspe, 2), "%",
@@ -570,8 +570,8 @@ plt_sp_ta_ndvi <- df_test %>%
   ggplot(aes(x = ndvi, y = truth, color = as.factor(date))) +
   geom_point() +
   geom_smooth(aes(color = NULL), color = 'black', method = 'lm', formula = y~x, se = F) +
-  scale_x_continuous("NDVI", limits = c(0.5,1))+
-  scale_y_continuous(expression(atop("Observed", "Tartaric acid (g/L)")), limits = c(0,20))+
+  scale_x_continuous("NDVI", limits = c(0.5,.8))+
+  scale_y_continuous(expression(atop("Observed", "Tartaric acid (g/L)")), limits = c(0,10))+
   scale_color_manual(values = col_all)+
   annotate("text", x = .5, y = Inf, vjust = 2, hjust = 0, 
            label = paste("R² =", round(df_stats_ndvi[df_stats_ndvi$param == "ta", "rsq"]$rsq, 2),
@@ -585,8 +585,8 @@ plt_sp_ta_ndvi_v <- df_test %>%
   ggplot(aes(x = ndvi, y = truth, color = as.factor(date))) +
   geom_point() +
   geom_smooth(aes(color = NULL), color = 'black', method = 'lm', formula = y~x, se = F) +
-  scale_x_continuous("NDVI", limits = c(0.5,1))+
-  scale_y_continuous(expression(atop("Observed", "Tartaric acid (g/L)")), limits = c(0,20))+
+  scale_x_continuous("NDVI", limits = c(0.5,.8))+
+  scale_y_continuous(expression(atop("Observed", "Tartaric acid (g/L)")), limits = c(0,10))+
   scale_color_manual(values = col_ver)+
   annotate("text", x = .5, y = Inf, vjust = 2, hjust = 0, 
            label = paste("R² =", round(df_stats_ndvi[df_stats_ndvi$param == "ta_veraison", "rsq"]$rsq, 2),
@@ -601,7 +601,7 @@ plt_sp_ta_pri <- df_test %>%
   geom_point() +
   geom_smooth(aes(color = NULL), color = 'black', method = 'lm', formula = y~x, se = F) +
   scale_x_continuous("PRI", limits = c(-.1,.1))+
-  scale_y_continuous(expression(atop("Observed", "Tartaric acid (g/L)")), limits = c(0,20))+
+  scale_y_continuous(expression(atop("Observed", "Tartaric acid (g/L)")), limits = c(0,10))+
   scale_color_manual(values = col_all)+
   annotate("text", x = 0, y = Inf, vjust = 2, hjust = 0, 
            label = paste("R² =", round(df_stats_pri[df_stats_pri$param == "ta", "rsq"]$rsq, 2),
@@ -616,7 +616,7 @@ plt_sp_ta_pri_v <- df_test %>%
   geom_point() +
   geom_smooth(aes(color = NULL), color = 'black', method = 'lm', formula = y~x, se = F) +
   scale_x_continuous("PRI", limits = c(-.1,.1))+
-  scale_y_continuous(expression(atop("Observed", "Tartaric acid (g/L)")), limits = c(0,20))+
+  scale_y_continuous(expression(atop("Observed", "Tartaric acid (g/L)")), limits = c(0,10))+
   scale_color_manual(values = col_ver)+
   annotate("text", x = 0, y = Inf, vjust = 2, hjust = 0, 
            label = paste("R² =", round(df_stats_pri[df_stats_pri$param == "ta_veraison", "rsq"]$rsq, 2),
@@ -632,10 +632,10 @@ plt_sp_ph_plsr <- df_test %>%
   geom_point() +
   geom_smooth(aes(color = NULL), color = 'black', method = 'lm', formula = y~x, se = F) +
   geom_abline(slope = 1, intercept = 0, linetype = 'dashed')+
-  scale_x_continuous("Predicted pH", limits = c(0,8))+
-  scale_y_continuous("Observed pH", limits = c(0,8))+
+  scale_x_continuous("Predicted pH", limits = c(2,4.5))+
+  scale_y_continuous("Observed pH", limits = c(2,4.5))+
   scale_color_manual(values = col_all)+
-  annotate("text", x = 0, y = Inf, vjust = 1.35, hjust = 0, 
+  annotate("text", x = 2, y = Inf, vjust = 1.35, hjust = 0, 
            label = paste("RMSPE =", round(df_stats[df_stats$param == "ph", "rmspe"]$rmspe, 2), "%",
                          "\nR² =", round(df_stats[df_stats$param == "ph", "rsq"]$rsq, 2),
                          cut(df_stats[df_stats$param == "ph", "p"]$p, 
@@ -649,10 +649,10 @@ plt_sp_ph_plsr_v <- df_test %>%
   geom_point() +
   geom_smooth(aes(color = NULL), color = 'black', method = 'lm', formula = y~x, se = F) +
   geom_abline(slope = 1, intercept = 0, linetype = 'dashed')+
-  scale_x_continuous("Predicted pH", limits = c(0,8))+
-  scale_y_continuous("Observed pH", limits = c(0,8))+
+  scale_x_continuous("Predicted pH", limits = c(2,4.5))+
+  scale_y_continuous("Observed pH", limits = c(2,4.5))+
   scale_color_manual(values = col_ver)+
-  annotate("text", x = 0, y = Inf, vjust = 1.35, hjust = 0, 
+  annotate("text", x = 2, y = Inf, vjust = 1.35, hjust = 0, 
            label = paste("RMSPE =", round(df_stats[df_stats$param == "ph_veraison", "rmspe"]$rmspe, 2), "%",
                          "\nR² =", round(df_stats[df_stats$param == "ph_veraison", "rsq"]$rsq, 2),
                          cut(df_stats[df_stats$param == "ph_veraison", "p"]$p, 
@@ -665,8 +665,8 @@ plt_sp_ph_ndvi <- df_test %>%
   ggplot(aes(x = ndvi, y = truth, color = as.factor(date))) +
   geom_point() +
   geom_smooth(aes(color = NULL), color = 'black', method = 'lm', formula = y~x, se = F) +
-  scale_x_continuous("NDVI", limits = c(0.5,1))+
-  scale_y_continuous("Observed pH", limits = c(0,8))+
+  scale_x_continuous("NDVI", limits = c(0.5,.8))+
+  scale_y_continuous("Observed pH", limits = c(2,4.5))+
   scale_color_manual(values = col_all)+
   annotate("text", x = .5, y = Inf, vjust = 2, hjust = 0, 
            label = paste("R² =", round(df_stats_ndvi[df_stats_ndvi$param == "ph", "rsq"]$rsq, 2),
@@ -680,10 +680,10 @@ plt_sp_ph_ndvi_v <- df_test %>%
   ggplot(aes(x = ndvi, y = truth, color = as.factor(date))) +
   geom_point() +
   geom_smooth(aes(color = NULL), color = 'black', method = 'lm', formula = y~x, se = F) +
-  scale_x_continuous("NDVI", limits = c(0.5,1))+
-  scale_y_continuous("Observed pH", limits = c(0,8))+
+  scale_x_continuous("NDVI", limits = c(0.5,.8))+
+  scale_y_continuous("Observed pH", limits = c(2,4.5))+
   scale_color_manual(values = col_ver)+
-  annotate("text", x = .5, y = Inf, vjust = 2, hjust = 0, 
+  annotate("text", x = 2.5, y = Inf, vjust = 2, hjust = 0, 
            label = paste("R² =", round(df_stats_ndvi[df_stats_ndvi$param == "ph_veraison", "rsq"]$rsq, 2),
                          cut(df_stats_ndvi[df_stats_ndvi$param == "ph_veraison", "p"]$p, 
                              breaks = c(-Inf, 0.001, 0.01, 0.05, Inf),
@@ -692,14 +692,29 @@ plt_sp_ph_ndvi_v <- df_test %>%
 
 
 #Saving sp figure
-png("figures/fig_scatter_berry.png", units="in", height = 10, width = 7, res=500)
+png("figures/fig_scatter_berry.png", units="in", height = 3, width = 10, res=500)
 
-ggarrange(as_ggplot(text_grob('NDVI', vjust = 3, hjust = .5, size = 14)),
-          as_ggplot(text_grob('PLSR', vjust = 3, hjust = .5, size = 14)),
-          plt_sp_brix_ndvi, plt_sp_brix_plsr, plt_sp_ta_ndvi, plt_sp_ta_plsr, plt_sp_ph_ndvi, plt_sp_ph_plsr,
-          ncol = 2, nrow = 4, common.legend = T, legend = "right", align = "hv", 
-          heights = c(.1,1,1,1,.1,1,1,1,1),
-          labels = c("", "", "(a)", "(b)", "(c)", "(d)", "(e)", "(f)", "", "", "(g)", "(h)", "(i)", "(j)", "(k)", "(l)"))
+# ggarrange(as_ggplot(text_grob('NDVI', vjust = 3, hjust = .5, size = 14)),
+#           as_ggplot(text_grob('PLSR', vjust = 3, hjust = .5, size = 14)),
+#           plt_sp_brix_ndvi, plt_sp_brix_plsr, plt_sp_ta_ndvi, plt_sp_ta_plsr, plt_sp_ph_ndvi, plt_sp_ph_plsr,
+#           ncol = 2, nrow = 4, common.legend = T, legend = "right", align = "hv", 
+#           heights = c(.1,1,1,1,.1,1,1,1,1),
+#           labels = c("", "", "(a)", "(b)", "(c)", "(d)", "(e)", "(f)", "", "", "(g)", "(h)", "(i)", "(j)", "(k)", "(l)"))
+
+ggarrange(plt_sp_brix_plsr, plt_sp_ta_plsr, plt_sp_ph_plsr,
+          ncol = 3, nrow = 1, common.legend = T, legend = "right", align = "hv",
+          heights = c(1),
+          labels = c( "(a)", "(b)", "(c)", "", "", "", "(d)", "(e)", "(f)",  "(g)", "(h)", "(i)", "(j)", "(k)", "(l)"))
+
+dev.off()   # Stop writing to the file
+
+#Saving sp figure NDVI
+png("figures/fig_scatter_berry_ndvi.png", units="in", height = 3, width = 10, res=500)
+
+ggarrange(plt_sp_brix_ndvi, plt_sp_ta_ndvi, plt_sp_ph_ndvi,
+          ncol = 3, nrow = 1, common.legend = T, legend = "right", align = "hv",
+          heights = c(1),
+          labels = c( "(a)", "(b)", "(c)", "", "", "", "(d)", "(e)", "(f)",  "(g)", "(h)", "(i)", "(j)", "(k)", "(l)"))
 
 dev.off()   # Stop writing to the file
 
