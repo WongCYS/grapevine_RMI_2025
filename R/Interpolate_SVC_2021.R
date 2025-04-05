@@ -1,9 +1,8 @@
 require(tidyverse)
 
-
 #list of all svc files
-file_list <- list.files("./raw_data/spectroscopy2023/", 
-                        pattern = ".csv",
+file_list <- list.files("./raw_data/spectroscopy2021/", 
+                        pattern = "svc.csv",
                         recursive = F, full.names = T)
 #list of svc data
 data_list <- list()
@@ -70,17 +69,10 @@ df_svc %>%
   ggplot(aes(x = as.numeric(wl), y = rfl, group = ID, color = Variety))+
   geom_line(show.legend = T)+
   scale_x_continuous("Wavelength (nm)")+
-  scale_y_continuous("Reflectance (%)", limits = c(0,100))+
+  scale_y_continuous("Reflectance (%)")+
   facet_wrap(~date)+
   theme_bw()
 
-#separate leaf and berry
-df_leaf <- df_svc %>%
-  filter(grepl(pattern ="leaf", rep))
-
-df_berry <- df_svc %>%
-  filter(grepl(pattern ="berry", rep))
-
 #save df
-write.csv(df_leaf, "./data/svc_clean_interp_leaf_2023.csv", row.names = F)
-write.csv(df_berry, "./data/svc_clean_interp_berry_2023.csv", row.names = F)
+write.csv(df_svc, "./data/svc_clean_interp_2021.csv", row.names = F)
+write.csv(df_svc, "./data/svc_clean_interp_leaf_2021.csv", row.names = F)
