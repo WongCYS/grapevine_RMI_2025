@@ -3,14 +3,11 @@ library(tidyverse)
 library(tidymodels)
 library(ggpubr)
 
-#Local directory
-wd <- 'C:/Users/p6exk/Box/UCDavis/'
-
 #Read in and clean data---------------------------------------------------------
 
 #read in spectral data
-df_spectra_2021 <- read.csv(paste0(wd, "RMI_grapes/RMI2021/spectroscopy/processed_data/svc_clean_interp.csv"), check.names = F)
-df_spectra_2023 <- read.csv(paste0(wd, "RMI_grapes/RMI2023/spectroscopy/svc_clean_interp.csv"), check.names = F)
+df_spectra_2021 <- read.csv("./data/svc_clean_interp_2021.csv", check.names = F)
+df_spectra_2023 <- read.csv("./data/svc_clean_interp_2023.csv", check.names = F)
 
 #merge spectra
 df_spectra <- rbind(df_spectra_2021, df_spectra_2023)
@@ -23,7 +20,6 @@ df_spectra <- df_spectra %>%
   filter(`480` <= 10) %>% #screen out bad spectra
   summarise_all(mean, na.rm = T) %>%
   select(!(`967`:`1021`)) %>% #screen out hot pixels
-  #select(!c(`1340`:`1445`, `1790`:`1955`, `2401`:`2500`)) %>% #screen out water absorption pixels
   mutate(NDVI = (`750` - `670`) / (`750` + `670`),
          PRI = (`531` - `570`) / (`531` + `570`),
          TVI = 0.5 * (120 * (`750` - `550`) - 200 * (`670` - `550`))) %>%
@@ -32,10 +28,10 @@ df_spectra <- df_spectra %>%
          date = as.Date(date, format = "%m/%d/%Y"))
 
 #read in origin info
-df_origin <- read.csv(paste0(wd, "RMI_grapes/RMI2021/VarietyOrigins.csv"))
+df_origin <- read.csv("./data/VarietyOrigins.csv")
 
 #read in berry composition data
-df_berry <- read.csv(paste0(wd, "RMI_grapes/RMI2023/berry_chemistry/berrychem_clean_2021_23.csv"))
+df_berry <- read.csv("./data/berrychem_clean_2021_23.csv")
 
 #clean berry df
 df_berry <- df_berry %>%
@@ -86,9 +82,7 @@ plt_ta <- df_data %>%
 
 #plot VI to berry scatterplots
 plt_reg <- df_data %>%
-  #ggplot(aes(x = brix, y = ((`531`-`570`)/(`531`+`570`)), color = as.factor(date)))+    #PRI
-  #ggplot(aes(x = brix, y = NDVI, color = as.factor(date)))+     #NDVI
-  ggplot(aes(x = brix, y = TVI, color = as.factor(date)))+     #TVI
+  ggplot(aes(x = brix, y = NDVI, color = as.factor(date)))+
   geom_point()+
   stat_cor(aes(color = NULL))+
   theme_bw()
@@ -693,26 +687,7 @@ plt_sp_ph_ndvi_v <- df_test %>%
 
 
 #Saving sp figure
-png("figures/fig_scatter.png", units="in", height = 7, width = 10, res=500)
-
-# ggarrange(NULL, as_ggplot(text_grob('NDVI', vjust = 3, hjust = 3.2, size = 14)), NULL,
-#           NULL, as_ggplot(text_grob('PLSR', vjust = 3, hjust = 3, size = 14)), NULL,
-#           as_ggplot(text_grob('Full period', vjust = 3, hjust = .8, size = 14)), NULL, NULL, NULL, NULL, NULL,
-#           plt_sp_brix_ndvi, plt_sp_ta_ndvi, plt_sp_ph_ndvi, plt_sp_brix_plsr, plt_sp_ta_plsr, plt_sp_ph_plsr,
-#           as_ggplot(text_grob('Post-Veraison', vjust = 3, hjust = .6, size = 14)), NULL, NULL, NULL, NULL, NULL,
-#           plt_sp_brix_ndvi_v, plt_sp_ta_ndvi_v, plt_sp_ph_ndvi_v, plt_sp_brix_plsr_v, plt_sp_ta_plsr_v, plt_sp_ph_plsr_v,
-#           ncol = 6, nrow = 5, common.legend = T, legend = "bottom", align = "hv", heights = c(.1,.1,1,.1,1,1),
-#           labels = c("", "", "", "", "", "", "", "", "", "", "", "", "(a)", "(b)", "(c)", "(d)", "(e)", "(f)", "", "", "", "", "", "", "(g)", "(h)", "(i)", "(j)", "(k)", "(l)"))
-
-# ggarrange(as_ggplot(text_grob('NDVI', vjust = 3, hjust = .5, size = 14)),
-#           as_ggplot(text_grob('PLSR', vjust = 3, hjust = .5, size = 14)),
-#           as_ggplot(text_grob('Full period', vjust = 3, hjust = 1, size = 14)), NULL,
-#           plt_sp_brix_ndvi, plt_sp_brix_plsr, plt_sp_ta_ndvi, plt_sp_ta_plsr, plt_sp_ph_ndvi, plt_sp_ph_plsr,
-#           as_ggplot(text_grob('Post-Veraison', vjust = 3, hjust = .8, size = 14)), NULL,
-#           plt_sp_brix_ndvi_v, plt_sp_brix_plsr_v, plt_sp_ta_ndvi_v, plt_sp_ta_plsr_v, plt_sp_ph_ndvi_v, plt_sp_ph_plsr_v,
-#           ncol = 2, nrow = 9, common.legend = T, legend = "right", align = "hv", 
-#           heights = c(.1,.1,1,1,1,.1,1,1,1,1),
-#           labels = c("", "", "", "", "(a)", "(b)", "(c)", "(d)", "(e)", "(f)", "", "", "(g)", "(h)", "(i)", "(j)", "(k)", "(l)"))
+png("./figures/fig_scatter.png", units="in", height = 7, width = 10, res=500)
 
 ggarrange(as_ggplot(text_grob('Full period', vjust = 3, hjust = 1, size = 14)), NULL, NULL,
           plt_sp_brix_plsr, plt_sp_ta_plsr, plt_sp_ph_plsr,
@@ -726,7 +701,7 @@ dev.off()   # Stop writing to the file
 
 
 #Saving sp figure ndvi
-png("figures/fig_scatter_ndvi.png", units="in", height = 7, width = 10, res=500)
+png("./figures/fig_scatter_ndvi.png", units="in", height = 7, width = 10, res=500)
 
 ggarrange(as_ggplot(text_grob('Full period', vjust = 3, hjust = 1, size = 14)), NULL, NULL,
           plt_sp_brix_ndvi, plt_sp_ta_ndvi, plt_sp_ph_ndvi,
@@ -748,20 +723,6 @@ plt_ts_brix_2021 <- df_data %>%
   ggplot(aes(date, brix, color = Variety_f))+
   geom_line(show.legend = T)+
   geom_point(aes(fill = Variety_f), show.legend = F, shape = 21, size = 2)+
-  # geom_text(data = . %>%
-  #             group_by(Variety_f) %>%
-  #             drop_na(Variety_f) %>%
-  #             filter(date == max(date)),
-  #           aes(label = Variety_f),
-  #           nudge_x = 1,
-  #           size = 3, hjust = 0, vjust = 0.5, show.legend = F)+
-  # geom_point(data = . %>%
-  #              group_by(Variety_f) %>%
-  #              drop_na(Variety_f) %>%
-  #              filter(date == max(date)),
-  #            aes(fill = Variety_f),
-  #            shape = 21,
-  #            size = 2, show.legend = F)+
   scale_x_date(NULL, limits = c(as.Date("2021-06-15"), as.Date("2021-09-15")), date_breaks = "1 month", date_labels = "%b")+
   scale_y_continuous("Brix", limits = c(0,30))+
   scale_color_viridis_d(option = "H")+
@@ -777,13 +738,6 @@ plt_ts_brix_2023 <- df_data %>%
   ggplot(aes(date, brix, color = Variety_f))+
   geom_line(show.legend = T)+
   geom_point(aes(fill = Variety_f), show.legend = F, shape = 21, size = 2)+
-  # geom_point(data = . %>%
-  #              group_by(Variety_f) %>%
-  #              drop_na(Variety_f) %>%
-  #              filter(date == max(date)),
-  #            aes(fill = Variety_f),
-  #            shape = 21,
-  #            size = 2, show.legend = F)+
   scale_x_date(NULL, limits = c(as.Date("2023-08-01"), as.Date("2023-10-01")), date_breaks = "1 month", date_labels = "%b")+
   scale_y_continuous("Brix", limits = c(0,30))+
   scale_color_viridis_d(option = "H")+
@@ -799,13 +753,6 @@ plt_ts_ta_2021 <- df_data %>%
   ggplot(aes(date, ta, color = Variety_f))+
   geom_line(show.legend = F)+
   geom_point(aes(fill = Variety_f), show.legend = F, shape = 21, size = 2)+
-  # geom_point(data = . %>%
-  #              group_by(Variety_f) %>%
-  #              drop_na(Variety_f) %>%
-  #              filter(date == max(date)),
-  #            aes(fill = Variety_f),
-  #            shape = 21,
-  #            size = 2, show.legend = F)+
   scale_x_date(NULL, limits = c(as.Date("2021-06-15"), as.Date("2021-10-01")), date_breaks = "1 month",  date_labels = "%b")+
   scale_y_continuous("Tartaric acid (g/L)", limits = c(0,15))+
   scale_color_viridis_d(option = "H")+
@@ -821,13 +768,6 @@ plt_ts_ta_2023 <- df_data %>%
   ggplot(aes(date, ta, color = Variety_f))+
   geom_line(show.legend = F)+
   geom_point(aes(fill = Variety_f), show.legend = F, shape = 21, size = 2)+
-  # geom_point(data = . %>%
-  #              group_by(Variety_f) %>%
-  #              drop_na(Variety_f) %>%
-  #              filter(date == max(date)),
-  #            aes(fill = Variety_f),
-  #            shape = 21,
-  #            size = 2, show.legend = F)+
   scale_x_date(NULL, limits = c(as.Date("2023-08-01"), as.Date("2023-10-01")), date_breaks = "1 month", date_labels = "%b")+
   scale_y_continuous("Tartaric acid (g/L)", limits = c(0,15))+
   scale_color_viridis_d(option = "H")+
@@ -843,13 +783,6 @@ plt_ts_ph_2021 <- df_data %>%
   ggplot(aes(date, ph, color = Variety_f))+
   geom_line(show.legend = F)+
   geom_point(aes(fill = Variety_f), show.legend = F, shape = 21, size = 2)+
-  # geom_point(data = . %>%
-  #              group_by(Variety_f) %>%
-  #              drop_na(Variety_f) %>%
-  #              filter(date == max(date)),
-  #            aes(fill = Variety_f),
-  #            shape = 21,
-  #            size = 2, show.legend = F)+
   scale_x_date(NULL, limits = c(as.Date("2021-06-15"), as.Date("2021-10-01")), date_breaks = "1 month", date_labels = "%b")+
   scale_y_continuous("pH", limits = c(0,5))+
   scale_color_viridis_d(option = "H")+
@@ -865,13 +798,6 @@ plt_ts_ph_2023 <- df_data %>%
   ggplot(aes(date, ph, color = Variety_f))+
   geom_line(show.legend = F)+
   geom_point(aes(fill = Variety_f), show.legend = F, shape = 21, size = 2)+
-  # geom_point(data = . %>%
-  #              group_by(Variety_f) %>%
-  #              drop_na(Variety_f) %>%
-  #              filter(date == max(date)),
-  #            aes(fill = Variety_f),
-  #            shape = 21,
-  #            size = 2, show.legend = F)+
   scale_x_date(NULL, limits = c(as.Date("2023-08-01"), as.Date("2023-10-01")), date_breaks = "1 month", date_labels = "%b")+
   scale_y_continuous("pH", limits = c(0,5))+
   scale_color_viridis_d(option = "H")+
@@ -887,13 +813,6 @@ plt_ts_ndvi_2021 <- df_data %>%
   ggplot(aes(date, NDVI, color = Variety_f))+
   geom_line(show.legend = F)+
   geom_point(aes(fill = Variety_f), show.legend = F, shape = 21, size = 2)+
-  # geom_point(data = . %>%
-  #              group_by(Variety_f) %>%
-  #              drop_na(Variety_f) %>%
-  #              filter(date == max(date)),
-  #            aes(fill = Variety_f),
-  #            shape = 21,
-  #            size = 2, show.legend = F)+
   scale_x_date(NULL, limits = c(as.Date("2021-06-15"), as.Date("2021-10-01")), date_breaks = "1 month", date_labels = "%b")+
   scale_y_continuous(limits = c(.6,.9))+
   scale_color_viridis_d(option = "H")+
@@ -909,13 +828,6 @@ plt_ts_ndvi_2023 <- df_data %>%
   ggplot(aes(date, NDVI, color = Variety_f))+
   geom_line(show.legend = F)+
   geom_point(aes(fill = Variety_f), show.legend = F, shape = 21, size = 2)+
-  # geom_point(data = . %>%
-  #              group_by(Variety_f) %>%
-  #              drop_na(Variety_f) %>%
-  #              filter(date == max(date)),
-  #            aes(fill = Variety_f),
-  #            shape = 21,
-  #            size = 2, show.legend = F)+
   scale_x_date(NULL, limits = c(as.Date("2023-08-01"), as.Date("2023-10-01")), date_breaks = "1 month", date_labels = "%b")+
   scale_y_continuous(limits = c(.6,.9))+
   scale_color_viridis_d(option = "H")+
@@ -923,7 +835,7 @@ plt_ts_ndvi_2023 <- df_data %>%
   theme_bw()+theme(legend.title=element_blank())
 
 #Saving sp figure
-png("figures/fig_timeseries.png", units="in", height = 10, width = 8, res=500)
+png("./figures/fig_timeseries.png", units="in", height = 10, width = 8, res=500)
 
 ggarrange(as_ggplot(text_grob('2021', vjust = 1, hjust = .5, size = 14)),
           as_ggplot(text_grob('2023', vjust = 1, hjust = .5, size = 14)),
@@ -1022,7 +934,6 @@ plt_bp_ta_diff <- df_aug %>%
   theme_bw()+
   theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1))
 
-
 #ph truth
 plt_bp_ph <- df_aug %>% 
   filter(param == "ph_veraison") %>%
@@ -1061,7 +972,7 @@ plt_bp_ph_diff <- df_aug %>%
   theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1))
 
 #Saving sp figure
-png("figures/fig_boxplots.png", units="in", height = 8, width = 12, res=500)
+png("./figures/fig_boxplots.png", units="in", height = 8, width = 12, res=500)
 
 annotate_figure(ggarrange(plt_bp_brix+theme(axis.text.x = element_blank()), 
           plt_bp_ta+theme(axis.text.x = element_blank()),
@@ -1172,7 +1083,7 @@ plt_spec_sept230918 <- df_data %>%
   theme_bw()
 
 #Saving spec figure
-png("figures/fig_spectra_leaf.png", units="in", height = 10, width = 12, res=500)
+png("./figures/fig_spectra_leaf.png", units="in", height = 10, width = 12, res=500)
 
 ggarrange(plt_spec_jun21,
           plt_spec_jul21,

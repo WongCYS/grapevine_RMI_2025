@@ -3,14 +3,11 @@ library(tidyverse)
 library(tidymodels)
 library(ggpubr)
 
-#Local directory
-wd <- 'C:/Users/p6exk/Box/UCDavis/'
-
 #Read in and clean data---------------------------------------------------------
 
 #read in spectral data
-df_spectra_2021 <- read.csv(paste0(wd, "RMI_grapes/RMI2021/spectroscopy/processed_data/svc_clean_interp.csv"), check.names = F)
-df_spectra_2023 <- read.csv(paste0(wd, "RMI_grapes/RMI2023/spectroscopy/svc_clean_interp.csv"), check.names = F)
+df_spectra_2021 <- read.csv("./data/svc_clean_interp_2021.csv", check.names = F)
+df_spectra_2023 <- read.csv("./data/svc_clean_interp_2023.csv", check.names = F)
 
 #merge spectra
 df_spectra <- rbind(df_spectra_2021, df_spectra_2023)
@@ -32,10 +29,10 @@ df_spectra <- df_spectra %>%
          date = as.Date(date, format = "%m/%d/%Y"))
 
 #read in origin info
-df_origin <- read.csv(paste0(wd, "RMI_grapes/RMI2021/VarietyOrigins.csv"))
+df_origin <- read.csv("./data/VarietyOrigins.csv")
 
 #read in berry composition data
-df_berry <- read.csv(paste0(wd, "RMI_grapes/RMI2023/berry_chemistry/berrychem_clean_2021_23.csv"))
+df_berry <- read.csv("./data/berrychem_clean_2021_23.csv")
 
 #clean berry df
 df_berry <- df_berry %>%
@@ -86,9 +83,7 @@ plt_ta <- df_data %>%
 
 #plot VI to berry scatterplots
 plt_reg <- df_data %>%
-  #ggplot(aes(x = brix, y = ((`531`-`570`)/(`531`+`570`)), color = as.factor(date)))+    #PRI
-  #ggplot(aes(x = brix, y = NDVI, color = as.factor(date)))+     #NDVI
-  ggplot(aes(x = brix, y = TVI, color = as.factor(date)))+     #TVI
+  ggplot(aes(x = brix, y = NDVI, color = as.factor(date)))+     #NDVI
   geom_point()+
   stat_cor(aes(color = NULL))+
   theme_bw()
@@ -390,7 +385,7 @@ plt_weight <- df_vip %>%
   theme_bw()
 
 #Saving spec figure
-png("figures/fig_vip_berry.png", units="in", height = 7, width = 8, res=500)
+png("./figures/fig_vip_berry.png", units="in", height = 7, width = 8, res=500)
 
 ggarrange(plt_weight, 
           plt_reg,
@@ -692,14 +687,7 @@ plt_sp_ph_ndvi_v <- df_test %>%
 
 
 #Saving sp figure
-png("figures/fig_scatter_berry.png", units="in", height = 3, width = 10, res=500)
-
-# ggarrange(as_ggplot(text_grob('NDVI', vjust = 3, hjust = .5, size = 14)),
-#           as_ggplot(text_grob('PLSR', vjust = 3, hjust = .5, size = 14)),
-#           plt_sp_brix_ndvi, plt_sp_brix_plsr, plt_sp_ta_ndvi, plt_sp_ta_plsr, plt_sp_ph_ndvi, plt_sp_ph_plsr,
-#           ncol = 2, nrow = 4, common.legend = T, legend = "right", align = "hv", 
-#           heights = c(.1,1,1,1,.1,1,1,1,1),
-#           labels = c("", "", "(a)", "(b)", "(c)", "(d)", "(e)", "(f)", "", "", "(g)", "(h)", "(i)", "(j)", "(k)", "(l)"))
+png("./figures/fig_scatter_berry.png", units="in", height = 3, width = 10, res=500)
 
 ggarrange(plt_sp_brix_plsr, plt_sp_ta_plsr, plt_sp_ph_plsr,
           ncol = 3, nrow = 1, common.legend = T, legend = "right", align = "hv",
@@ -709,7 +697,7 @@ ggarrange(plt_sp_brix_plsr, plt_sp_ta_plsr, plt_sp_ph_plsr,
 dev.off()   # Stop writing to the file
 
 #Saving sp figure NDVI
-png("figures/fig_scatter_berry_ndvi.png", units="in", height = 3, width = 10, res=500)
+png("./figures/fig_scatter_berry_ndvi.png", units="in", height = 3, width = 10, res=500)
 
 ggarrange(plt_sp_brix_ndvi, plt_sp_ta_ndvi, plt_sp_ph_ndvi,
           ncol = 3, nrow = 1, common.legend = T, legend = "right", align = "hv",
@@ -765,7 +753,7 @@ plt_spec_sept230918 <- df_data %>%
   theme_bw()
 
 #Saving spec figure
-png("figures/fig_spectra_berry.png", units="in", height = 10, width = 12, res=500)
+png("./figures/fig_spectra_berry.png", units="in", height = 10, width = 12, res=500)
 
 ggarrange(plt_spec_aug230814,
           plt_spec_aug230828,

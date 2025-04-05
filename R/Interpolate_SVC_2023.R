@@ -1,10 +1,8 @@
 require(tidyverse)
 
-#Local directory
-wd <- 'C:/Users/p6exk/Box/UCDavis/'
 
 #list of all svc files
-file_list <- list.files(paste0(wd, "RMI_grapes/RMI2023/spectroscopy/"), 
+file_list <- list.files("./raw_data/spectroscopy2023/", 
                         pattern = ".csv",
                         recursive = F, full.names = T)
 #list of svc data
@@ -77,4 +75,4 @@ df_svc %>%
   theme_bw()
 
 #save df
-write.csv(df_svc, paste0(wd, "RMI_grapes/RMI2023/spectroscopy/svc_clean_interp.csv"), row.names = F)
+write.csv(df_svc, "./data/svc_clean_interp_2023.csv", row.names = F)
