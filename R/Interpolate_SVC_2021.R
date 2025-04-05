@@ -74,5 +74,4 @@ df_svc %>%
   theme_bw()
 
 #save df
-write.csv(df_svc, "./data/svc_clean_interp_2021.csv", row.names = F)
 write.csv(df_svc, "./data/svc_clean_interp_leaf_2021.csv", row.names = F)
